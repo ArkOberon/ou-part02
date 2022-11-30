@@ -1,23 +1,34 @@
 import React, { useState } from 'react'
 import Persons from './Persons'
+import Form from './Form'
+import Filter from './Filter'
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
-
+  const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
+  const [ newPhone, setNewPhone ] = useState('')
+  const [ word, setWord ] = useState('')
+  const [ showAll, setShowAll ] = useState(true)
 
   const handleNameChange = (e) => {
     setNewName(e.target.value)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()  
+  const handlePhoneChange = (e) => {
+    setNewPhone(e.target.value)
+  }
 
+  const handleWordChange = (e) => {
+    setWord(e.target.value)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault() 
+    
     const personInfo = {
-      name: newName
-    }    
+      name: newName,
+      phone: newPhone
+    } 
 
     let names = persons.map(person => person.name)
 
@@ -27,33 +38,43 @@ const App = () => {
     
     } else {
 
-      setPersons(persons.concat(personInfo)) 
+      setPersons([...persons, personInfo]) 
 
     }
         
-    setNewName('')    
+    setNewName('') 
+    setNewPhone('')   
   }
 
+  const personsToShow = showAll    
+    ? persons    
+    : persons.filter(contact => contact.name.toLowerCase() === word.toLowerCase())
+        
   return (
     <>
-      <h2>Phonebook</h2>
-      <form onSubmit={handleSubmit} >
-        <div>
-          name: 
-          <input 
-            type="text" 
-            value={newName} 
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>      
-      </form>
-      <h2>Numbers</h2>
+      <h1>Phonebook</h1>
+      <Filter 
+        word={word}
+        handleWordChange={handleWordChange}
+        setShowAll={setShowAll}
+        showAll={showAll}
+      />
+
+      <Form 
+        handleNameChange={handleNameChange}
+        handleSubmit={handleSubmit}
+        newName={newName}
+        newPhone={newPhone}
+        handlePhoneChange={handlePhoneChange}
+      /> 
+      
+      <h2>Contacts</h2>
       {
-        persons.map((contact) =>
-          <Persons key={contact.name} persons={contact}/>
+        personsToShow.map((contact) =>
+          <Persons 
+            key={contact.name} 
+            persons={contact}
+          />
         )
       }      
     </>

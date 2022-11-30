@@ -1,9 +1,11 @@
 import React from 'react'
 
-function Persons( { persons } ) {  
+function Persons( { persons } ) {    
+
   return (
-    <>      
-      <p>{persons.name}</p> 
+    <>     
+      <p><b>Name:</b>{persons.name} </p>  
+      <p><b>Phone Number:</b>{persons.phone}</p>              
     </>
   )
 }
